@@ -32,7 +32,7 @@
 
 1. **克隆项目**：
 ```bash
-git clone https://github.com/你的用户名/仓库名.git
+git clone https://github.com/ShiJie0755/HKBUAIchatbot.git
 cd chatbot
 
 ```
