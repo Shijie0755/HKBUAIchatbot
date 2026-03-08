@@ -1,82 +1,66 @@
 import subprocess
-import sys
 import os
+import sys
 import time
 import webbrowser
 import signal
 
-# 进程列表，用于最后统一关闭
-processes = []
+def launch():
+    # 1. 确定路径
+    root_dir = os.getcwd()
+    backend_dir = os.path.join(root_dir, "backend")
+    frontend_dir = os.path.join(root_dir, "frontend")
 
-def start_backend():
-    """启动 FastAPI 后端"""
-    print("🐍 [1/2] Starting FastAPI Backend...")
-    backend_dir = os.path.join(os.getcwd(), "backend")
-    # 自动识别虚拟环境中的 python 路径
+    # 2. 找到 Python 虚拟环境执行文件
     python_exe = os.path.join(backend_dir, "venv", "Scripts", "python.exe") if os.name == 'nt' else os.path.join(backend_dir, "venv", "bin", "python")
     
     if not os.path.exists(python_exe):
-        print("❌ Error: Virtual environment not found. Please run setup_all.py first!")
-        return None
-
-    # 启动命令
-    cmd = f'"{python_exe}" -m uvicorn main:app --reload --port 8000'
-    p = subprocess.Popen(cmd, shell=True, cwd=backend_dir)
-    return p
-
-def start_frontend():
-    """启动 React 前端"""
-    print("⚛️ [2/2] Starting React Frontend...")
-    frontend_dir = os.path.join(os.getcwd(), "frontend")
-    
-    if not os.path.exists(os.path.join(frontend_dir, "node_modules")):
-        print("❌ Error: node_modules not found. Please run setup_all.py first!")
-        return None
-
-    # 启动命令
-    p = subprocess.Popen("npm run dev", shell=True, cwd=frontend_dir)
-    return p
-
-def main():
-    print("=" * 50)
-    print("🌟 HKBU Chatbot Workstation - Unified Launcher")
-    print("=" * 50)
-
-    # 1. 启动后端
-    backend_p = start_backend()
-    if backend_p: processes.append(backend_p)
-
-    # 2. 启动前端
-    frontend_p = start_frontend()
-    if frontend_p: processes.append(frontend_p)
-
-    if len(processes) < 2:
-        print("🛑 Startup failed. Please check the errors above.")
+        print("❌ Error: venv not found. Please run setup_all.py first!")
         return
 
-    # 3. 等待几秒后自动打开浏览器
-    print("\n⏳ Waiting for services to initialize...")
-    time.sleep(5)
-    print("🌐 Opening browser to http://localhost:5173")
-    webbrowser.open("http://localhost:5173")
+    print("=" * 50)
+    print("🤖 HKBU Smart Chatbot - Unified Launcher")
+    print("=" * 50)
 
-    print("\n" + "!" * 50)
-    print("🔥 App is RUNNING! Press Ctrl+C to stop all services.")
-    print("!" * 50 + "\n")
+    # 3. 启动后端 (8000 端口)
+    print("\n[1/2] Launching Backend Server...")
+    # 使用 creationflags=subprocess.CREATE_NEW_CONSOLE 让它在独立窗口运行，方便看日志
+    backend_proc = subprocess.Popen(
+        f'"{python_exe}" -m uvicorn main:app --reload --port 8000',
+        shell=True,
+        cwd=backend_dir,
+        creationflags=subprocess.CREATE_NEW_CONSOLE if os.name == 'nt' else 0
+    )
+
+    # 4. 启动前端 (5173 端口)
+    print("[2/2] Launching Frontend (Vite)...")
+    frontend_proc = subprocess.Popen(
+        "npm run dev",
+        shell=True,
+        cwd=frontend_dir,
+        creationflags=subprocess.CREATE_NEW_CONSOLE if os.name == 'nt' else 0
+    )
+
+    # 5. 自动弹出浏览器
+    print("\n⏳ Initializing services...")
+    time.sleep(3)  # 给系统一点喘息时间
+    url = "http://localhost:5173"
+    print(f"🌐 Opening browser to {url}")
+    webbrowser.open(url)
+
+    print("\n" + "★" * 50)
+    print("  SUCCESS: Both systems are now live!")
+    print("  - Backend: http://127.0.0.1:8000")
+    print("  - Frontend: http://localhost:5173")
+    print("  Close the two new windows to stop the servers.")
+    print("  Press Ctrl+C in THIS window to exit this launcher.")
+    print("★" * 50)
 
     try:
-        # 保持主进程运行
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\n\n🛑 Stopping all services...")
-        for p in processes:
-            if os.name == 'nt':
-                # Windows 下优雅地结束子进程树
-                subprocess.call(['taskkill', '/F', '/T', '/PID', str(p.pid)])
-            else:
-                p.terminate()
-        print("✅ Cleanup complete. Goodbye, Jiafu!")
+        print("\nStopping launcher...")
 
 if __name__ == "__main__":
-    main()
+    launch()

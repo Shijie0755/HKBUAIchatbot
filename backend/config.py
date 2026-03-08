@@ -18,6 +18,7 @@ MODELS: dict[str, dict] = {
     "gpt-4.1":          {"deployment": "gpt-4.1",          "api_version": "2024-12-01-preview", "family": "gpt"},
     "gpt-5-mini":       {"deployment": "gpt-5-mini",       "api_version": "2024-12-01-preview", "family": "gpt"},
     "gpt-5":            {"deployment": "gpt-5",            "api_version": "2024-12-01-preview", "family": "gpt"},
-    "gemini-2.5-flash": {"deployment": "gemini-2.5-flash", "api_version": "2024-02-01",         "family": "gemini"},
-    "gemini-2.5-pro":   {"deployment": "gemini-2.2.5-pro", "api_version": "2024-02-01",         "family": "gemini"},
+    # Gemini: 必须使用 api-version=v1（或 v1beta），忽略文档中的日期格式；endpoint 中 {model} 为平台部署名；认证用 "api-key" header。
+    "gemini-2.5-flash": {"deployment": "gemini-2.5-flash", "api_version": "v1",         "family": "gemini"},
+    "gemini-2.5-pro":   {"deployment": "gemini-2.2.5-pro", "api_version": "v1",         "family": "gemini"},
 }

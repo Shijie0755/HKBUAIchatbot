@@ -33,7 +33,11 @@ async def call_hkbu_api(
         f"?api-version={cfg['api_version']}"
     )
     headers = {"api-key": api_key, "Content-Type": "application/json"}
-    payload = {"messages": messages}
+    payload = {
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
 
     async with httpx.AsyncClient(timeout=120) as client:
         resp = await client.post(url, headers=headers, json=payload)
@@ -53,6 +57,7 @@ async def check_hkbu_connection(api_key: str, model_key: str) -> tuple[bool, str
     headers = {"api-key": api_key, "Content-Type": "application/json"}
     payload = {
         "messages": [{"role": "user", "content": "hi"}],
+        "temperature": 0.7,
         "max_tokens": 1,
     }
     try:

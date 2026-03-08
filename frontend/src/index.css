@@ -514,7 +514,7 @@ body {
    ======================================================== */
 .input-bar {
   position: absolute;
-  bottom: 28px;
+  bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 48px);
@@ -669,6 +669,12 @@ body {
   pointer-events: none;
   z-index: 98;
   letter-spacing: .02em;
+}
+.token-footer-copyright {
+  display: block;
+  margin-top: 2px;
+  font-size: .6rem;
+  opacity: .85;
 }
 
 /* ========================================================
