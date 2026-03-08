@@ -1,0 +1,31 @@
+# === Python 垃圾与环境 ===
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+
+# === Frontend (Vite/React) ===
+node_modules/
+dist/
+dist-ssr/
+*.local
+.DS_Store
+Thumbs.db
+
+# === 隐私数据 (非常重要) ===
+# 忽略所有生成的聊天记录和用户画像 
+backend/data/*.json
+backend/data/conversations/*.json
+data/*.json
+
+# === 敏感配置 ===
+# 如果你的 config.py 里写死了 API Key，请取消下面这一行的注释
+# backend/config.py
+
+# === 个人杂物 ===
+test.py
+新建文本文档.txt
+*.log
